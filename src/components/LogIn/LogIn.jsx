@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './LogIn.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-function LogIn() {
+function LogIn({onAddUser}) {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     userName: '',
@@ -15,7 +15,33 @@ function LogIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const existingUserData = {
+      username: loginData.userName,
+      password: loginData.password
+    }
+    // Signing Up new users
+    fetch("https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/login", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  body: JSON.stringify({user:existingUserData}),
+})
+  .then((r) => r.json())
+  .then(
+    (data) => {
+    // save the token to localStorage for future access
+    localStorage.setItem("jwt", data.jwt);
+    // save the user somewhere (in state!) to log the user in
+    onAddUser(data.user);
+    console.log(data.user)
     navigate('/');
+  })
+  .catch((error) => {
+    // Handle error if needed
+    console.error('Error:', error);
+  });
   };
 
   return (

@@ -13,6 +13,7 @@ import Footer from '../Home/Footer.jsx';
 function App() {
   const [cartItems, setCartItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null)
 
   const addToCart = (product) => {
     setCartItems([...cartItems, product]);
@@ -57,8 +58,8 @@ function App() {
               path="/products/:id"
               element={<Product addToCart={addToCart} />}
             />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
+            <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
           </Routes>
         </div>
         <Footer />
