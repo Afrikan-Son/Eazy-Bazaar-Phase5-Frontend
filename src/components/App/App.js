@@ -19,6 +19,8 @@ function App() {
     setCartItems([...cartItems, product]);
   };
 
+
+
   const removeFromCart = (productId) => {
     const updatedCartItems = cartItems.filter((item) => item.id !== productId);
     setCartItems(updatedCartItems);
@@ -35,7 +37,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-container">
-        <Navbar onSearch={handleSearch} />
+        <Navbar onSearch={handleSearch} user={user} setUser={setUser}/>
         <div className="content-container">
           <Routes>
             <Route path="/" element={<Home />} />

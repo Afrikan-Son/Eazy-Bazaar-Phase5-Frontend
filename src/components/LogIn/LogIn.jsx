@@ -35,7 +35,6 @@ function LogIn({onAddUser}) {
     localStorage.setItem("jwt", data.jwt);
     // save the user somewhere (in state!) to log the user in
     onAddUser(data.user);
-    console.log(data.user)
     navigate('/');
   })
   .catch((error) => {

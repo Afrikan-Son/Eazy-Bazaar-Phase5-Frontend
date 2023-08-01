@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ onSearch }) => {
+const Navbar = ({ onSearch, user,setUser }) => {
+  console.log(user)
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+
+  useEffect(() => {
+    // Checking if the JWT token is expired
+    const jwtToken = localStorage.getItem('jwt');
+    if (jwtToken) {
+      const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
+      const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
+      if (expirationTime < Date.now()) {
+        // Token is expired, perform logout action
+        handleLogout();
+      } else {
+        // Token is still valid, set the user state
+        // Note: You might want to store more user information in the token and extract it here
+        setUser({ username: decodedToken.username });
+      }
+    }
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -18,9 +37,21 @@ const Navbar = ({ onSearch }) => {
       setSearchTerm('');
     }
   };
+  const handleLogout = () => {
+    // Clear the JWT token from localStorage
+    localStorage.removeItem('jwt');
+    // Reset the user state
+    setUser(null)
+    // After logout, redirect the user to the login page
+
+    navigate('/login');
+  };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 5000);
   };
 
   return (
@@ -57,18 +88,39 @@ const Navbar = ({ onSearch }) => {
         </form>
       </div>
       <div className="actions-container">
-        <button className="account-button" onClick={toggleDropdown}>
-          Account
-        </button>
-        {showDropdown && (
-          <ul className="dropdown-menu">
-            <li>
-              <Link to="/signup">Sign Up</Link>
-            </li>
-            <li>
-              <Link to="/login">Log In</Link>
-            </li>
-          </ul>
+          {user ? (
+          <React.Fragment>
+            <button className="account-button" onClick={toggleDropdown}>
+              {user.username} {/* Display the user's name */}
+            </button>
+            {showDropdown && (
+              <ul className="dropdown-menu">
+                <li>
+                  <Link to="/profile">Profile</Link> {/* Change the dropdown option to "Profile" */}
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Logout</button> {/* Add a Logout button */}
+                </li>
+              </ul>
+            )}
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            {/* Show the default "Account" button and dropdown options for non-authenticated users */}
+            <button className="account-button" onClick={toggleDropdown}>
+              Account
+            </button>
+            {showDropdown && (
+              <ul className="dropdown-menu">
+                <li>
+                  <Link to="/signup">Sign Up</Link>
+                </li>
+                <li>
+                  <Link to="/login">Log In</Link>
+                </li>
+              </ul>
+            )}
+          </React.Fragment>
         )}
         <Link to="/cart" className="cart-button">
           Cart
