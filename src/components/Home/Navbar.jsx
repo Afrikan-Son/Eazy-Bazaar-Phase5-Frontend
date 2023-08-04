@@ -9,8 +9,8 @@ const Navbar = ({ onSearch, user,setUser }) => {
   const location = useLocation();
   useEffect(() => {
     // Checking if the JWT token is expired
-    const jwtToken = localStorage.getItem('jwt');
-    if (jwtToken) {
+    const jwtToken = localStorage.getItem('jwt'); 
+    if (jwtToken ) {
       const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
       const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
       if (expirationTime < Date.now()) {

@@ -40,6 +40,7 @@ const Cart = ({ cartItems, removeFromCart, setCartItems, clearCart }) => {
   const handleDelivery = () => {
     if (cartItems.length > 0) {
       const selectedIds = cartItems.map((item) => item.id);
+      console.log(selectedIds)
       window.location.href = `/rider?ids=${selectedIds.join(',')}`;
     }
   };

@@ -5,7 +5,8 @@ import CustomAlert from './CustomAlert';
 import Modal from './Modal';
 import DummyRiders from './Riders';
 
-const Rider = ({ orders, setOrders }) => {
+const Rider = ({ orders, setOrders, cartItems }) => {
+  console.log(cartItems)
   const location = useLocation();
   const [selectedOrderIds, setSelectedOrderIds] = useState([]);
   const [selectedRider, setSelectedRider] = useState(null);
