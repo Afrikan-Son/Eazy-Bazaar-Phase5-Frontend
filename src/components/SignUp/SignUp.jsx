@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './SignUp.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-function SignUp({onAddUser}) {
+function SignUp({setUser}) {
+  
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     name: '',
@@ -38,8 +39,7 @@ function SignUp({onAddUser}) {
     // save the token to localStorage for future access
     localStorage.setItem("jwt", data.jwt);
     // save the user somewhere (in state!) to log the user in
-    onAddUser(data.user);
-    console.log(data.user)
+    setUser(data.user);
     navigate('/');
   })
   .catch((error) => {

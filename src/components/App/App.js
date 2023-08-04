@@ -76,9 +76,9 @@ function App() {
             />
             <Route exact path="/" element={<Home />} />
             {/* Pass the 'user' object as a prop to the 'User' component */}
-            <Route path="/profile" element={<User setUser={setUser}/>} />
+            <Route path="/profile" element={<User user={user} setUser={setUser}/>} />
             <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
-            <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
+            <Route path="/signup" element={<SignUp setUser ={setUser}/>} />
             <Route
   path="/rider"
   element={
