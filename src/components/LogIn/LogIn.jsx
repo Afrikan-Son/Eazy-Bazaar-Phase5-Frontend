@@ -4,21 +4,25 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 function LogIn({onAddUser}) {
   const navigate = useNavigate();
+   // State to store login form data
   const [loginData, setLoginData] = useState({
     userName: '',
     password: '',
   });
 
+  // Function to handle input changes
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+  // Function to handle form submission
    const handleSubmit = (e) => {
     e.preventDefault();
     const existingUserData = {
       username: loginData.userName,
       password: loginData.password
     }
+    // Sending login data to the server
     // Signing Up new users
     fetch("https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/login", {
   method: "POST",
@@ -34,7 +38,9 @@ function LogIn({onAddUser}) {
     // save the token to localStorage for future access
     localStorage.setItem("jwt", data.jwt);
     // save the user somewhere (in state!) to log the user in
+    // Call the onAddUser function to update user state
     onAddUser(data.user);
+    // Navigate to the home page
     navigate('/');
   })
   .catch((error) => {
