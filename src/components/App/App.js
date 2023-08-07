@@ -44,6 +44,7 @@ function App() {
     setCartItems([]);
   };
 
+   // Function to handle search input
   const handleSearch = (searchQuery) => {
     setSearchTerm(searchQuery);
   };
