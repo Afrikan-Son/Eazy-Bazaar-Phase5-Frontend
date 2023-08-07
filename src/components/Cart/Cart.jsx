@@ -3,17 +3,20 @@ import { Link } from 'react-router-dom';
 import './Cart.css';
 const Cart = ({ cartItems, removeFromCart, setCartItems, clearCart }) => {
   console.log(cartItems)
+  // Function to handle removing a product from the cart
   const handleRemoveFromCart = (productId) => {
     const updatedCartItems = cartItems.filter((item) => item.id !== productId);
     setCartItems(updatedCartItems);
     removeFromCart(productId);
   };
 
+   // Function to clear the entire cart
   const handleClearCart = () => {
     setCartItems([]);
     clearCart();
   };
 
+  // Function to handle changing the quantity of a product in the cart
   const handleQuantityChange = (productId, quantity) => {
     const updatedCartItems = cartItems.map((item) => {
       if (item.id === productId) {
@@ -28,15 +31,19 @@ const Cart = ({ cartItems, removeFromCart, setCartItems, clearCart }) => {
     setCartItems(updatedCartItems);
   };
 
+  // Function to calculate the total quantity of items in the cart
   const getTotalQuantity = () => {
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     return totalQuantity;
   };
 
+  // Function to calculate the total amount of all items in the cart
   const getTotalAmount = () => {
     const totalAmount = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     return totalAmount;
   };
+
+  // Function to handle delivery button click
   const handleDelivery = () => {
     if (cartItems.length > 0) {
       const selectedIds = cartItems.map((item) => item.id);
