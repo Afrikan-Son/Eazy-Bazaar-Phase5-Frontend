@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 function SignUp({onAddUser}) {
   const navigate = useNavigate();
+  // State to store user registration data
   const [loginData, setLoginData] = useState({
     name: '',
     email: '',
@@ -11,11 +12,14 @@ function SignUp({onAddUser}) {
     password: '',
   });
 
+  // Function to handle input changes
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
+    // Create a new user object with registration data
     const newUserData = {
       username: loginData.name,
       email: loginData.email,
@@ -24,6 +28,7 @@ function SignUp({onAddUser}) {
     }
     e.preventDefault();
     // Signing Up new users
+    // Sending user registration data to the server
     fetch("https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/users", {
   method: "POST",
   headers: {
@@ -38,8 +43,10 @@ function SignUp({onAddUser}) {
     // save the token to localStorage for future access
     localStorage.setItem("jwt", data.jwt);
     // save the user somewhere (in state!) to log the user in
+    // Call the onAddUser function to update user state
     onAddUser(data.user);
     console.log(data.user)
+    // Navigate to the home page
     navigate('/');
   })
   .catch((error) => {
