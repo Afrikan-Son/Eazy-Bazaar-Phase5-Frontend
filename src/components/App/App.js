@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LogIn from '../LogIn/LogIn.jsx';
 import SignUp from '../SignUp/SignUp.jsx';
 import Cart from '../Cart/Cart.jsx';
@@ -11,6 +11,9 @@ import Footer from '../Home/Footer.jsx';
 import Rider from '../LandingPage/Rider.jsx';
 import User from '../LandingPage/User.jsx';
 import UserProfile from '../UserProfile/UserProfile.jsx';
+import AdminLoginForm from '../Admin/AdminLoginForm.jsx';
+import AdminDashboard from '../Admin/AdminDashboard.jsx';
+import AddRiders from '../Admin/AddRiders.jsx';
 
 
 function App() {
@@ -21,29 +24,30 @@ function App() {
     // Add more orders as needed
   ]);
 
-  const addToCart = (product) => {
-    const existingItem = cartItems.find((item) => item.id === product.id);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [showNav, setShowNav] = useState(false);
 
-    if (existingItem) {
-      // If the product already exists in the cart, increment the quantity
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
-      );
-    } else {
-      // If the product doesn't exist in the cart, add it with quantity = 1
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+  const handleAdminLogin = () => {
+    // Your authentication logic here (e.g., API call to validate admin credentials)
+    // For simplicity, we are using a hardcoded admin login check.
+    // Replace this with your actual authentication mechanism.
+    // if (username === 'admin' && password === 'password') {
+      setIsAdminLoggedIn(true);
+      setShowNav(false)
+      // navigate('admin/dashboard', {replace:true});
+    // }
+  };
+
+  const addToCart = (product) => {
+    // Your existing addToCart logic
   };
 
   const removeFromCart = (productId) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== productId);
-    setCartItems(updatedCartItems);
+    // Your existing removeFromCart logic
   };
 
   const clearCart = () => {
-    setCartItems([]);
+    // Your existing clearCart logic
   };
 
   const handleSearch = (searchQuery) => {
@@ -51,11 +55,12 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    // <BrowserRouter>
       <div className="app-container">
-        <Navbar onSearch={handleSearch} user={user} setUser={setUser}/>
+        <Navbar  onSearch={handleSearch} user={user} setUser={setUser} showNav={showNav}/>
         <div className="content-container">
           <Routes>
+            {/* Your existing routes */}
             <Route path="/" element={<Home />} />
             <Route
               path="/cart"
@@ -82,21 +87,28 @@ function App() {
             <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
             <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
             <Route path="/profile" element={<UserProfile onAddUser = {setUser}/>} />
+            {/* <Route path="/addrider" element={<SignUp onAddUser = {setUser}/>} /> */}
             <Route
-  path="/rider"
-  element={
-    <Rider
-      orders={orders} // Make sure this prop is passed
-      setOrders={setOrders} // Make sure this prop is passed
-      cartItems={cartItems}
-    />
-  }
-/>
+              path="/rider"
+              element={
+                <Rider
+                  orders={orders} // Make sure this prop is passed
+                  setOrders={setOrders} // Make sure this prop is passed
+                  cartItems={cartItems}
+                />
+              }
+            />
+            {/* Add routes for admin login and dashboard */}
+            {/* {isAdminLoggedIn ? ( */}
+              <Route path="/admin/dashboard" element={<AdminDashboard  isAdminLoggedIn={isAdminLoggedIn} />} />
+            {/* ) : ( */}
+            <Route path="/admin/login" element={<AdminLoginForm handleAdminLogin={handleAdminLogin}  isAdminLoggedIn={isAdminLoggedIn}/>} />
+            {/* )} */}
           </Routes>
         </div>
         <Footer />
       </div>
-    </BrowserRouter>
+    // </BrowserRouter>
   );
 }
 
