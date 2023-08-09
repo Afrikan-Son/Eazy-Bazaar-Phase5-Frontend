@@ -10,19 +10,25 @@ import Product from '../LandingPage/Product.jsx';
 import Footer from '../Home/Footer.jsx';
 import Rider from '../LandingPage/Rider.jsx';
 import User from '../LandingPage/User.jsx';
-// import UserProfile from '../UserProfile/UserProfile.jsx';
 import AdminLoginForm from '../Admin/AdminLoginForm.jsx';
 import AdminDashboard from '../Admin/AdminDashboard.jsx';
 import AddRiders from '../Admin/AddRiders.jsx';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart } from '../../features/cart/cartSlice.js';
+
 
 
 function App() {
-  const [cartItems, setCartItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState(null)
-  const [orders, setOrders] = useState([
-    // Add more orders as needed
-  ]);
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+  const [orders, setOrders] = useState(cartItems);
+  
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product))
+  }
 
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showNav, setShowNav] = useState(false);
@@ -38,56 +44,39 @@ function App() {
     // }
   };
 
-  const addToCart = (product) => {
-    // Your existing addToCart logic
-  };
-
-  const removeFromCart = (productId) => {
-    // Your existing removeFromCart logic
-  };
-
-  const clearCart = () => {
-    // Your existing clearCart logic
-  };
-
   const handleSearch = (searchQuery) => {
     setSearchTerm(searchQuery);
   };
 
   return (
-    // <BrowserRouter>
+    <BrowserRouter>
       <div className="app-container">
         <Navbar  onSearch={handleSearch} user={user} setUser={setUser} showNav={showNav}/>
         <div className="content-container">
           <Routes>
             {/* Your existing routes */}
-            <Route path="/" element={<Home />} />
+
+            <Route path="/" element={<Home addToCart={handleAddToCart}/>} />
+
             <Route
               path="/cart"
               element={
-                <Cart
-                  cartItems={cartItems}
-                  removeFromCart={removeFromCart}
-                  setCartItems={setCartItems}
-                  clearCart={clearCart}
-                />
+                <Cart/>
               }
             />
             <Route
               path="/products/*"
-              element={<Products addToCart={addToCart} searchTerm={searchTerm} />}
+              element={<Products addToCart={handleAddToCart} searchTerm={searchTerm} />}
             />
             <Route
               path="/products/:id"
-              element={<Product addToCart={addToCart} />}
+              element={<Product addToCart={handleAddToCart} />}
             />
-            <Route exact path="/" element={<Home />} />
             {/* Pass the 'user' object as a prop to the 'User' component */}
             {/* <Route path="/profile" element={<User setUser={setUser}/>} /> */}
             <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
             <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
-            {/* <Route path="/profile" element={<UserProfile onAddUser = {setUser}/>} /> */}
-            {/* <Route path="/addrider" element={<SignUp onAddUser = {setUser}/>} /> */}
+
             <Route
               path="/rider"
               element={
@@ -107,8 +96,9 @@ function App() {
           </Routes>
         </div>
         <Footer />
+
       </div>
-    // </BrowserRouter>
+    </BrowserRouter>
   );
 }
 

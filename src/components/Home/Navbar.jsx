@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 const Navbar = ({ onSearch, user,setUser, showNav }) => {
   console.log(user)
+
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
@@ -10,18 +11,20 @@ const Navbar = ({ onSearch, user,setUser, showNav }) => {
   useEffect(() => {
     // Checking if the JWT token is expired
     const jwtToken = localStorage.getItem('jwt');
-    // if (jwtToken) {
-    //   const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
-    //   const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
-    //   if (expirationTime < Date.now()) {
-    //     // Token is expired, perform logout action
-    //     handleLogout();
-    //   } else {
-    //     // Token is still valid, set the user state
-    //     // Note: You might want to store more user information in the token and extract it here
-    //     setUser({ username: decodedToken.username });
-    //   }
-    // }
+
+    if (jwtToken) {
+      const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
+      const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
+      if (expirationTime < Date.now()) {
+        // Token is expired, perform logout action
+        handleLogout();
+      } else {
+        // Token is still valid, set the user state
+        // Note: You might want to store more user information in the token and extract it here
+        setUser({ username: decodedToken.username });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleSearch = (e) => {
     e.preventDefault();

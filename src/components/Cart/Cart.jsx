@@ -1,32 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Cart.css';
-const Cart = ({ cartItems, removeFromCart, setCartItems, clearCart }) => {
-  console.log(cartItems)
-  const handleRemoveFromCart = (productId) => {
-    const updatedCartItems = cartItems.filter((item) => item.id !== productId);
-    setCartItems(updatedCartItems);
-    removeFromCart(productId);
-  };
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  removeFromCart,
+  updateQuantity,
+  updateCartItems,
+  clearCart,
+} from '../../features/cart/cartSlice'
+import { useEffect } from 'react';
 
-  const handleClearCart = () => {
-    setCartItems([]);
-    clearCart();
+const Cart = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+  
+  const handleRemoveFromCart = (productId) => {
+    dispatch(removeFromCart(productId));
   };
 
   const handleQuantityChange = (productId, quantity) => {
-    const updatedCartItems = cartItems.map((item) => {
-      if (item.id === productId) {
-        return {
-          ...item,
-          quantity: quantity,
-        };
-      }
-      return item;
-    });
-
-    setCartItems(updatedCartItems);
+    dispatch(updateQuantity({ productId, quantity }));
   };
+
+  
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+  
+  console.log(cartItems)
+   useEffect(() => {
+    const storedCartItems = localStorage.getItem('cartItems');
+    if (storedCartItems) {
+      dispatch(updateCartItems(JSON.parse(storedCartItems)));
+    }
+  }, [dispatch]);
+
+  // ... rest of your component code
+
+  // Whenever the cart items change, update the local storage
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
 
   const getTotalQuantity = () => {
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -72,7 +86,7 @@ const Cart = ({ cartItems, removeFromCart, setCartItems, clearCart }) => {
                     cartItems &&
                     cartItems.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.title}</td>
+                        <td className='item-name' style={{width: '20px'}}>{item.name}</td>
                         <td>
                           <img src={item.image} alt={item.title} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%' }} />
                         </td>

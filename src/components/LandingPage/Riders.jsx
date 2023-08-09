@@ -2,6 +2,7 @@ import React from 'react';
 import './Riders.css';
 
 const DummyRiders = ({ riders, selectedOrders, onRiderSelect }) => {
+  console.log(selectedOrders)
   return (
     <div className="dummy-riders-container">
       <h2>Select a Rider</h2>
@@ -23,7 +24,7 @@ const DummyRiders = ({ riders, selectedOrders, onRiderSelect }) => {
                 <ul>
                   {selectedOrders.map((order) => (
                     <li key={order.id}>
-                      <p>{order.orderName}</p>
+                      <p>{order.name}</p>
                       <p>Total Amount: ${order.totalAmount}</p>
                     </li>
                   ))}

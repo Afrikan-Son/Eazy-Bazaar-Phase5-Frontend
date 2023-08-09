@@ -5,7 +5,7 @@ import CustomAlert from './CustomAlert';
 import Modal from './Modal';
 import DummyRiders from './Riders';
 
-const Rider = ({ orders, setOrders }) => {
+const Rider = ({ orders, setOrders, cartItems }) => {
   const location = useLocation();
   const [selectedOrderIds, setSelectedOrderIds] = useState([]);
   const [selectedRider, setSelectedRider] = useState(null);
@@ -25,14 +25,6 @@ const Rider = ({ orders, setOrders }) => {
       setSelectedOrderIds(idsParam.split(','));
     }
   }, [location.search]);
-
-  const handleOrderSelect = (orderId) => {
-    if (selectedOrderIds.includes(orderId)) {
-      setSelectedOrderIds(selectedOrderIds.filter((id) => id !== orderId));
-    } else {
-      setSelectedOrderIds([...selectedOrderIds, orderId]);
-    }
-  };
 
   const handleRiderSelect = (rider) => {
     setSelectedRider(rider);
@@ -62,21 +54,15 @@ const Rider = ({ orders, setOrders }) => {
     setSelectedOrderIds([]);
     setSelectedRider(null);
   };
-
-  const getTotalAmount = () => {
-    const totalAmount = selectedOrderIds.reduce((acc, orderId) => {
-      const order = orders.find((order) => order.id === orderId);
-      return order ? acc + order.totalAmount : acc;
-    }, 0);
+const getTotalAmount = () => {
+const totalAmount = orders.reduce((acc, item) => acc + item.price * item.quantity, 0);
     return totalAmount;
-  };
+};
+console.log(getTotalAmount())
 
   const getSelectedProducts = () => {
-    const selectedProducts = selectedOrderIds.map((orderId) => {
-      const order = orders.find((order) => order.id === orderId);
-      return order ? order.orderName : '';
-    });
-    return selectedProducts;
+    const selectedProducts = orders.map((item) => item.name)
+    return selectedProducts
   };
 
   return (
@@ -102,10 +88,9 @@ const Rider = ({ orders, setOrders }) => {
                 {orders.map((order) => (
                   <li
                     key={order.id}
-                    onClick={() => handleOrderSelect(order.id)}
                     className={selectedOrderIds.includes(order.id) ? 'selected' : ''}
                   >
-                    {order.orderName} - ${order.totalAmount}
+                    {order.name} - ${order.price} * {order.quantity}
                   </li>
                 ))}
               </ul>
@@ -118,7 +103,7 @@ const Rider = ({ orders, setOrders }) => {
             {selectedOrderIds.length > 0 && (
               <div className="text-center mt-4">
                 <p>Total Amount of Selected Orders: ${getTotalAmount()}</p>
-                <p>Products Being Delivered: {getSelectedProducts().join(', ')}</p>
+                <p>Products Being Delivered: <br />{getSelectedProducts().join(', ')}</p>
               </div>
             )}
           </div>
