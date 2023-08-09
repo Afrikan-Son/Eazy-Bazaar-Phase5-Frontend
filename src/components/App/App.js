@@ -10,7 +10,7 @@ import Product from '../LandingPage/Product.jsx';
 import Footer from '../Home/Footer.jsx';
 import Rider from '../LandingPage/Rider.jsx';
 import User from '../LandingPage/User.jsx';
-import UserProfile from '../UserProfile/UserProfile.jsx';
+// import UserProfile from '../UserProfile/UserProfile.jsx';
 import AdminLoginForm from '../Admin/AdminLoginForm.jsx';
 import AdminDashboard from '../Admin/AdminDashboard.jsx';
 import AddRiders from '../Admin/AddRiders.jsx';
@@ -86,7 +86,7 @@ function App() {
             {/* <Route path="/profile" element={<User setUser={setUser}/>} /> */}
             <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
             <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
-            <Route path="/profile" element={<UserProfile onAddUser = {setUser}/>} />
+            {/* <Route path="/profile" element={<UserProfile onAddUser = {setUser}/>} /> */}
             {/* <Route path="/addrider" element={<SignUp onAddUser = {setUser}/>} /> */}
             <Route
               path="/rider"
