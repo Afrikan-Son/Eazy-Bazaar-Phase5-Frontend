@@ -58,7 +58,6 @@ const getTotalAmount = () => {
 const totalAmount = orders.reduce((acc, item) => acc + item.price * item.quantity, 0);
     return totalAmount;
 };
-console.log(getTotalAmount())
 
   const getSelectedProducts = () => {
     const selectedProducts = orders.map((item) => item.name)

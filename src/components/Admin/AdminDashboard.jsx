@@ -12,7 +12,8 @@ import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
 import IconButton from "@mui/joy/IconButton";
 import Users from "./Users/Users";
 
-const AdminDashboard = ({ isAdminLoggedIn }) => {
+const AdminDashboard = ({ isAdminLoggedIn,adminData,setAdminData,setIsAdminLoggedIn,setShowNav}) => {
+  console.log(isAdminLoggedIn,adminData)
   const [riders, setRiders] = useState([
     { id: 1, name: "Rider 1" },
     { id: 2, name: "Rider 2" },
@@ -30,14 +31,20 @@ const AdminDashboard = ({ isAdminLoggedIn }) => {
   };
 
   useEffect(() => {
-    if (!isAdminLoggedIn) {
-      navigate("/admin/login", { replace: true });
-    }
-  }, [isAdminLoggedIn]);
+       // Check if adminData exists in local storage
+    const storedAdminData = localStorage.getItem("adminData");
+    if (storedAdminData) {
+      const adminDataFromStorage = JSON.parse(storedAdminData);
+      setAdminData(adminDataFromStorage);
+      setIsAdminLoggedIn(true);
+      setShowNav(true);
+  } 
+},[]);
+const storedAdminData = localStorage.getItem("adminData")
 
   return (
     <CssVarsProvider>
-      <main>
+      {storedAdminData ? <main>
         <Sheet
           sx={{
             width: "100%",
@@ -53,7 +60,10 @@ const AdminDashboard = ({ isAdminLoggedIn }) => {
             sx={{ marginInlineStart: "auto" }}
             variant="plain"
             color="danger"
-            onClick={function () {}}
+            onClick={function () {
+              localStorage.removeItem('adminData')
+              navigate("/login", { replace: true });
+            }}
           >
             <LogoutOutlined />
           </IconButton>
@@ -86,7 +96,7 @@ const AdminDashboard = ({ isAdminLoggedIn }) => {
           <TabPanel value={2}></TabPanel>
           <TabPanel value={3}></TabPanel>
         </Tabs>
-      </main>
+      </main> : null}
     </CssVarsProvider>
   );
 };
