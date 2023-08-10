@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
-const Navbar = ({ onSearch, user,setUser }) => {
+const Navbar = ({ onSearch, user,setUser, showNav }) => {
+  console.log(user)
+
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
@@ -9,6 +11,7 @@ const Navbar = ({ onSearch, user,setUser }) => {
   useEffect(() => {
     // Checking if the JWT token is expired
     const jwtToken = localStorage.getItem('jwt');
+
     if (jwtToken) {
       const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
       const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
@@ -48,6 +51,7 @@ const Navbar = ({ onSearch, user,setUser }) => {
     }, 5000);
   };
   return (
+    showNav? (
     <nav className="navbar">
       <div className="logo-container">
         <Link to="/" className="logo">
@@ -119,7 +123,7 @@ const Navbar = ({ onSearch, user,setUser }) => {
           Riders
         </Link>
       </div>
-    </nav>
+    </nav>):(<></>)
   );
 };
 export default Navbar;

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './LogIn.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+// import logo from '../'
+
 function LogIn({onAddUser}) {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
