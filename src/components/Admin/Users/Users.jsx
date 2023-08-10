@@ -2,17 +2,23 @@ import { CssVarsProvider } from "@mui/joy/styles";
 import Sheet from "@mui/joy/Sheet/Sheet";
 import Typography from "@mui/joy/Typography";
 import Table from "@mui/joy/Table";
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios'
 
-const Users = () => {
-  const createData = (avatar, name, email, bio, contact_info, created_at) => {
-    return { avatar, name, email, bio, contact_info, created_at };
-  };
-  const rows = [
-    createData("","John Doe", 'jdoe@examlpe.com', 'Lorem ipsum..', '+23454323513', 'June, 3 2023'),
-    createData("","Jane Doe", 'jdoe@examlpe.com', 'Lorem ipsum..', '+23454323513', 'June, 3 2023'),
-    createData("","Jack B. Ken", 'jdoe@examlpe.com', 'Lorem ipsum..', '+23454323513', 'June, 3 2023'),
-    createData("","Jill Green", 'jdoe@examlpe.com', 'Lorem ipsum..', '+23454323513', 'June, 3 2023'),
-  ];
+
+const Users = ({users,onDeleteUser}) => {
+
+  function handleDelete(user) {
+    axios.delete(`https://eazy-bazaar-ecommerce-app.onrender.com//api/v1/users/${user.id}`)
+      .then(response => {
+        onDeleteUser(user.id);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+
   return (
     <CssVarsProvider>
       <main>
@@ -34,14 +40,14 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
-                <tr key={row.name}>
-                  <td></td>
-                  <td>{row.name}</td>
-                  <td>{row.email}</td>
-                  <td>{row.bio}</td>
-                  <td>{row.contact_info}</td>
-                  <td>{row.created_at}</td>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td> <DeleteIcon sx={{ "&:hover": { color: "#0d6efd" } }} onClick={() => handleDelete(user)}/></td>
+                  <td>{user.username}</td>
+                  <td width={'100px'}>{user.email}</td>
+                  <td>{user.bio}</td>
+                  <td>{user.contact_info}</td>
+                  <td>{user.created_at}</td>
                 </tr>
               ))}
             </tbody>

@@ -20,7 +20,7 @@ const AdminLoginForm = ({ handleAdminLogin, isAdminLoggedIn,adminData,setAdminDa
 const handleLogin = () => {
   const existingAdminUserData = {
     username,
-    password,
+    password
   };
 
   fetch("https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/login", {
