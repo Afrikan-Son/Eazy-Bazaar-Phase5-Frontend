@@ -70,7 +70,7 @@ const handleAdminLogin = () => {
               element={<Product addToCart={handleAddToCart} />}
             />
             {/* Pass the 'user' object as a prop to the 'User' component */}
-            {/* <Route path="/profile" element={<User setUser={setUser}/>} /> */}
+            <Route path="/profile" element={<User setUser={setUser}/>} /> 
             <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
             <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
 
