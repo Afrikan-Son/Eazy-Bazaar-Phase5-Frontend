@@ -24,6 +24,8 @@ function App() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const [orders, setOrders] = useState(cartItems);
+  const [errors,setErrors] = useState([])
+  const [adminData,setAdminData] = useState([])
   
 
   const handleAddToCart = (product) => {
@@ -33,17 +35,12 @@ function App() {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showNav, setShowNav] = useState(false);
 
-  const handleAdminLogin = () => {
-    // Your authentication logic here (e.g., API call to validate admin credentials)
-    // For simplicity, we are using a hardcoded admin login check.
-    // Replace this with your actual authentication mechanism.
-    // if (username === 'admin' && password === 'password') {
-      setIsAdminLoggedIn(true);
-      setShowNav(false)
-      // navigate('admin/dashboard', {replace:true});
-    // }
-  };
 
+const handleAdminLogin = () => {
+      setIsAdminLoggedIn(true);
+      setShowNav(true);
+
+};
   const handleSearch = (searchQuery) => {
     setSearchTerm(searchQuery);
   };
@@ -89,9 +86,9 @@ function App() {
             />
             {/* Add routes for admin login and dashboard */}
             {/* {isAdminLoggedIn ? ( */}
-              <Route path="/admin/dashboard" element={<AdminDashboard  isAdminLoggedIn={isAdminLoggedIn} />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard setShowNav={setShowNav} adminData={adminData} setAdminData={setAdminData} setIsAdminLoggedIn={setIsAdminLoggedIn}  isAdminLoggedIn={isAdminLoggedIn} />} />
             {/* ) : ( */}
-            <Route path="/admin/login" element={<AdminLoginForm handleAdminLogin={handleAdminLogin}  isAdminLoggedIn={isAdminLoggedIn}/>} />
+            <Route path="/admin/login" element={<AdminLoginForm adminData={adminData} setIsAdminLoggedIn={setIsAdminLoggedIn} setAdminData={setAdminData} handleAdminLogin={handleAdminLogin} setErrors={setErrors}   isAdminLoggedIn={isAdminLoggedIn}/>} />
             {/* )} */}
           </Routes>
         </div>

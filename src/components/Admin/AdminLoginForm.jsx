@@ -10,46 +10,85 @@ import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 
-const AdminLoginForm = ({ handleAdminLogin, isAdminLoggedIn }) => {
+const AdminLoginForm = ({ handleAdminLogin, isAdminLoggedIn,adminData,setAdminData,setErrors }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Your login logic here (e.g., validate credentials and call handleAdminLogin if successful)
-    // For simplicity, we are using a hardcoded admin login check.
-    // Replace this with your actual authentication mechanism.
-    if (username === "admin" && password === "password") {
-      handleAdminLogin();
-    }
+const handleLogin = () => {
+  const existingAdminUserData = {
+    username,
+    password
+  };
+
+  fetch("https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ user: existingAdminUserData }),
+  })
+    .then((r) => r.json())
+    .then((data) => {
+      // Save the token to localStorage for future access
+      localStorage.setItem("jwt", data.jwt);
+      // Save the admin data to localStorage
+      localStorage.setItem("adminData", JSON.stringify(data.user));
+      // Set the adminData state
+      setAdminData(data.user);
+
+      if (data.user.is_admin) {
+        handleAdminLogin();
+      }
+    })
+    .catch((error) => {
+      // Handle error if needed
+      console.error("Error:", error);
+      setErrors(error.message);
+    });
+};
+
+  const handleLogout = () => {
+    // Clear the JWT token from localStorage
+    localStorage.removeItem('jwt');
+    // Reset the user state
+    setAdminData(null)
+    // After logout, redirect the user to the login page
+    navigate('/login');
   };
 
   useEffect(() => {
+    // handleLogin()
     if (isAdminLoggedIn) {
       navigate("/admin/dashboard", { replace: true });
+      const jwtToken = localStorage.getItem('jwt');
+      if (jwtToken) {
+        try {
+          const decodedToken = JSON.parse(atob(jwtToken.split('.')[1]));
+          const expirationTime = decodedToken.exp * 1000; // Converting expiration time to milliseconds
+          if (expirationTime < Date.now()) {
+            // Token is expired, perform logout action
+            handleLogout();
+          } else {
+            // Token is still valid, set the user state
+            // Note: You might want to store more user information in the token and extract it here
+            // setAdminData({ username: decodedToken.username });
+            console.log(decodedToken)
+          }
+        } catch (error) {
+          console.error('Error decoding JWT token:', error);
+          // Handle the error as needed, such as logging out the user
+          handleLogout();
+        }
     }
-  }, [isAdminLoggedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  } 
+},[isAdminLoggedIn]);
 
   return (
-    // <LoginFormContainer>
-    //   <LoginFormCard>
-    //     <LoginFormTitle>Admin Login</LoginFormTitle>
-    //     <InputField
-    //       type="text"
-    //       placeholder="Username"
-    //       value={username}
-    //       onChange={(e) => setUsername(e.target.value)}
-    //     />
-    //     <InputField
-    //       type="password"
-    //       placeholder="Password"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //     />
-    //     <LoginButton onClick={handleLogin}>Login</LoginButton>
-    //   </LoginFormCard>
-    // </LoginFormContainer>
 
     <CssVarsProvider>
       <main>
