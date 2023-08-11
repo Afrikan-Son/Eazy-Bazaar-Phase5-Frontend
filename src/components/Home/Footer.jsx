@@ -25,7 +25,7 @@ const Footer = () => {
   return (
     <footer className={`footer ${showFooter ? 'show' : ''}`}>
        <div className="partnership-container">
-        <p className="partnership-info">Partnership Groups: KCB, AMAZON</p>
+        <p className="partnership-info"></p>
       </div>
       <div className="about-container">
         <p className="about-info">

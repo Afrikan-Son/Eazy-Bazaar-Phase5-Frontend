@@ -12,6 +12,7 @@ import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
 import IconButton from "@mui/joy/IconButton";
 import Users from "./Users/Users";
 import axios from 'axios'
+import AddRiders from "./AddRiders";
 
 const AdminDashboard = ({ isAdminLoggedIn,adminData,setAdminData,setIsAdminLoggedIn,setShowNav}) => {
   const [riders, setRiders] = useState([]);
@@ -25,9 +26,11 @@ const AdminDashboard = ({ isAdminLoggedIn,adminData,setAdminData,setIsAdminLogge
     setRiders([...riders, newRider]);
   };
 
-  const handleRemoveRider = (riderId) => {
-    setRiders(riders.filter((rider) => rider.id !== riderId));
+  const handleRemoveRider = (id) => {
+    const updatedRiders = riders.filter((rider) => rider.id !== id);
+    setRiders(updatedRiders)
   };
+
 
    function handleDeleteuser(id) {
     const updatedUsers = users.filter((user) => user.id !== id);
@@ -68,10 +71,10 @@ useEffect(() => {
   }, []);
   useEffect(() => {
   const urls = [ 
-    "https://eazy-bazaar-ecommerce-app.onrender.com//api/v1/users",
-    "https://eazy-bazaar-ecommerce-app.onrender.com//riders",
-    "https://eazy-bazaar-ecommerce-app.onrender.com//api/v1/users/orders_sorted",
-    "https://eazy-bazaar-ecommerce-app.onrender.com//products"
+    "https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/users",
+    "https://eazy-bazaar-ecommerce-app.onrender.com/riders",
+    "https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/users/orders_sorted",
+    "https://eazy-bazaar-ecommerce-app.onrender.com/products"
   ];
 
   Promise.all(urls.map(url => axios.get(url)))
@@ -147,8 +150,11 @@ const storedAdminData = localStorage.getItem("adminData")
           >
             <Users users={users} onDeleteUser={handleDeleteuser}/>
           </TabPanel>
-          <TabPanel value={1}></TabPanel>
-          <TabPanel value={2}></TabPanel>
+          <TabPanel value={1}>
+          </TabPanel>
+          <TabPanel value={2}>
+            <AddRiders riders={riders} setRiders={setRiders} onAddRider={handleAddRider} onDeleteRider={handleRemoveRider} />
+          </TabPanel>
           <TabPanel value={3}></TabPanel>
         </Tabs>
       </main> : null}
