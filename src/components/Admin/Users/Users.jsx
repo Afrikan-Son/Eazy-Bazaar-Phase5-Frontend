@@ -9,7 +9,7 @@ import axios from 'axios'
 const Users = ({users,onDeleteUser}) => {
 
   function handleDelete(user) {
-    axios.delete(`https://eazy-bazaar-ecommerce-app.onrender.com//api/v1/users/${user.id}`)
+    axios.delete(`https://eazy-bazaar-ecommerce-app.onrender.com/api/v1/users/${user.id}`)
       .then(response => {
         onDeleteUser(user.id);
       })
