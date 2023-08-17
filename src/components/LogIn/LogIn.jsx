@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 function LogIn({onAddUser}) {
   const navigate = useNavigate();
+  const [errors,setErrors] = useState('')
   const [loginData, setLoginData] = useState({
     userName: '',
     password: '',
@@ -30,21 +31,39 @@ function LogIn({onAddUser}) {
   },
   body: JSON.stringify({user:existingUserData}),
 })
-  .then((r) => r.json())
-  .then(
-    (data) => {
-    // save the token to localStorage for future access
-    localStorage.setItem("jwt", data.jwt);
-    // save the user somewhere (in state!) to log the user in
-    onAddUser(data.user);
-    navigate('/');
+.then((r) => {
+ if (r.ok) {
+  return r.json();
+ } else {
+  return r.json().then(data => {
+    setErrors(data.message)
+    throw new Error(data.message)
+    
+  })
+ }
+})
+.then(
+  (data) => {
+  // save the token to localStorage for future access
+  localStorage.setItem("jwt", data.jwt);
+  // save the user somewhere (in state!) to log the user in
+  onAddUser(data.user);
+  console.log(data.user)
+  navigate('/');
   })
   .catch((error) => {
-    // Handle error if needed
-    console.error('Error:', error);
-  });
-  };
-
+  // Handle error if needed
+  console.error('Error:', error);
+  // setErrors(error.error)
+  // console.log(error.error)
+})
+}
+console.log(typeof(errors))
+setTimeout(() => {
+  if (errors) {
+    setErrors('')
+  }
+},5000)
 
   return (
     <div className="wrapper">
@@ -72,6 +91,8 @@ function LogIn({onAddUser}) {
           Don't have an account? <NavLink to="/signup">Sign Up</NavLink>
         </p>
       </div>
+      {errors && 
+      <li className="text-center mt-4" style={{color:'red'}}>{errors}</li>}
     </div>
   );
 }

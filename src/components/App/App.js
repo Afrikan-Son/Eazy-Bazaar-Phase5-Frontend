@@ -71,8 +71,8 @@ const handleAdminLogin = () => {
             />
             {/* Pass the 'user' object as a prop to the 'User' component */}
             <Route path="/profile" element={<User setUser={setUser}/>} /> 
-            <Route path="/login" element={<LogIn onAddUser = {setUser}/>} />
-            <Route path="/signup" element={<SignUp onAddUser = {setUser}/>} />
+            <Route path="/login" element={<LogIn onAddUser = {setUser} errors={errors} setErrors={setErrors}/>} />
+            <Route path="/signup" element={<SignUp onAddUser = {setUser} errors={errors} setErrors={setErrors}/>} />
 
             <Route
               path="/rider"

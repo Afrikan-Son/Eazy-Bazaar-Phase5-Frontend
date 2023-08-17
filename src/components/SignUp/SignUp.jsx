@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './SignUp.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-function SignUp({onAddUser}) {
+function SignUp({onAddUser,errors,setErrors}) {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     name: '',
@@ -32,8 +32,10 @@ function SignUp({onAddUser}) {
   },
   body: JSON.stringify({user:newUserData}),
 })
-  .then((r) => r.json())
-  .then(
+  .then((r) => {
+  if (r.ok) {
+
+  r.json().then(
     (data) => {
     // save the token to localStorage for future access
     localStorage.setItem("jwt", data.jwt);
@@ -41,12 +43,18 @@ function SignUp({onAddUser}) {
     onAddUser(data.user);
     console.log(data.user)
     navigate('/');
-  })
-  .catch((error) => {
+    })} else {
+  r.json().catch((error) => {
     // Handle error if needed
-    console.error('Error:', error);
+    console.log('Error:', error);
+    setErrors(error.error)
+    console.log(error.error)
+
+
+  })};
   });
-  };
+}
+console.log(errors)
 
   return (
     <div className="wrapper">
